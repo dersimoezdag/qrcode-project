@@ -32,7 +32,7 @@ def create_qr_code_image(matrix, output_path):
     plt.imsave(output_path, image)
     print(f"Das Bild wurde als {output_path} gespeichert.")
 
-# Beispiel 21x21-Matrix (ersetzen Sie dies durch Ihre tatsächliche Matrix)
+# 21x21-Matrix mit allen bekannten Elementen
 matrix = np.array([
     [1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1],
     [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
