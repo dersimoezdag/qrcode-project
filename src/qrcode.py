@@ -254,14 +254,15 @@ validPositions = [
     (18, 18),
 ]
 
-countMainLoop = 0
-
+# Main
 if len(tilesList) != 22 or len(validPositions) != 22:
     print(
         "tilesList: " + len(tilesList),
         "validPositions:" + len(validPositions),
         "should both be: " + 22,
     )
+
+countMainLoop = 0
 # for x in variants:
 #     countMainLoop += 1
 
