@@ -1,5 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from itertools import permutations
+from tqdm import tqdm
 
 
 def is_valid_qr_code(matrix):
@@ -49,13 +51,16 @@ def create_qr_code_image(matrix, output_path):
     print(f"Das Bild wurde als {output_path} gespeichert.")
 
 
-def insert_matrix(big_matrix, small_matrix, positions):
-    for position in positions:
-        big_matrix[
-            position[0] : position[0] + small_matrix.shape[0],
-            position[1] : position[1] + small_matrix.shape[1],
-        ] = small_matrix
+def insert_matrix(big_matrix, small_matrix, position):
+    big_matrix[
+        position[0] : position[0] + small_matrix.shape[0],
+        position[1] : position[1] + small_matrix.shape[1],
+    ] = small_matrix
     return big_matrix
+
+
+def generate_permutations(lst):
+    return list(permutations(lst))
 
 
 # 21x21-Matrix mit allen bekannten Elementen
@@ -255,6 +260,8 @@ validPositions = [
 ]
 
 # Main
+
+# Check lists for valid length
 if len(tilesList) != 22 or len(validPositions) != 22:
     print(
         "tilesList: " + len(tilesList),
@@ -262,15 +269,21 @@ if len(tilesList) != 22 or len(validPositions) != 22:
         "should both be: " + 22,
     )
 
-countMainLoop = 0
-# for x in variants:
-#     countMainLoop += 1
+# start main script
+countPermutations = 0
+for perm in tqdm(generate_permutations(tilesList)):
+    countMainLoop = 0
+    for tile in perm:
+        countMainLoop += 1
 
-#     result_matrix = insert_matrix(baseMatrix, tile_01, validPositions)
-#     print(result_matrix)
+        for position in validPositions:
+            result_matrix = insert_matrix(baseMatrix, tile, position)
 
-#     # Überprüfen, ob die Matrix ein gültiger QR-Code ist
-#     if is_valid_qr_code(result_matrix):
-#         create_qr_code_image(result_matrix, "valid_qr_code.png" + countMainLoop)
-#     else:
-#         print("Die Matrix ist kein gültiger QR-Code.")
+        print(result_matrix)
+        # Überprüfen, ob die Matrix ein gültiger QR-Code ist
+        if is_valid_qr_code(result_matrix):
+            create_qr_code_image(
+                result_matrix, "valid_qr_code_" + countMainLoop + "_.png"
+            )
+        else:
+            print("Die Matrix ist kein gültiger QR-Code.")
