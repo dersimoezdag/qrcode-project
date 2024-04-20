@@ -216,6 +216,7 @@ tilesList = [
     tile_28,
     tile_32,
     tile_33,
+    tile_34,
     tile_35,
     tile_39,
     tile_40,
@@ -228,7 +229,7 @@ tilesList = [
 ]
 
 
-valid_positions = [
+validPositions = [
     (9, 0),
     (9, 3),
     (9, 6),
@@ -255,11 +256,16 @@ valid_positions = [
 
 countMainLoop = 0
 
-print(len(tilesList), len(valid_positions), 22)
+if len(tilesList) != 22 or len(validPositions) != 22:
+    print(
+        "tilesList: " + len(tilesList),
+        "validPositions:" + len(validPositions),
+        "should both be: " + 22,
+    )
 # for x in variants:
 #     countMainLoop += 1
 
-#     result_matrix = insert_matrix(baseMatrix, tile_01, valid_positions)
+#     result_matrix = insert_matrix(baseMatrix, tile_01, validPositions)
 #     print(result_matrix)
 
 #     # Überprüfen, ob die Matrix ein gültiger QR-Code ist
