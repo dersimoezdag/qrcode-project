@@ -6,6 +6,10 @@ import yaml
 import matplotlib.pyplot as plt
 from itertools import permutations
 from math import factorial
+from pyzbar.pyzbar import decode as decodeQRCode
+import cv2
+
+testmode = True
 
 
 def print_percent_done(index, total, bar_len=50, title="Please wait"):
@@ -36,26 +40,28 @@ def is_valid_qr_code(matrix):
 
     # # Überprüfen, ob die Matrix 21x21 ist
     # if matrix.shape != (21, 21):
-    #     print("shape error")
+    #     if testmode: print("shape error")
     #     return False
 
     # # Überprüfen, ob es keine schwarzen Quadrate im zentralen 5x5-Bereich gibt
     # if np.sum(matrix[8:13, 8:13]) > 0:
-    #     print("central area error")
+    #     if testmode: print("central area error")
     #     return False
 
     # # Überprüfen, ob es genau 3 schwarze Quadrate in den Ecken gibt
     # if matrix[0, 0] != 1 or matrix[0, 20] != 1 or matrix[20, 0] != 1:
-    #     print("orientation square error")
+    #     if testmode:  print("orientation square error")
     #     return False
 
     # Überprüfe Timingreihen
     expectedValues = [0, 1, 0, 1, 0, 1, 0]
     if np.array_equal(matrix[6, 6:13], expectedValues):
-        # print("timing row error")
+        if testmode:
+            print("timing row error")
         return False
     if np.array_equal(matrix[6:16, 6], expectedValues):
-        # print("timing row error")
+        if testmode:
+            print("timing row error")
         return False
 
     # Überprüfe Matrixcode (Prüfen, ob die untere rechte 2x2-Submatrix der 21x21-Matrix mit dem Encoding-Code übereinstimmt)
@@ -66,19 +72,34 @@ def is_valid_qr_code(matrix):
         [1, 0]
         ])
     # fmt: on
-    if np.array_equal(matrix[-2:, -2:], expectedEncodingCode):
-        # print("encoding code error")
+    if not np.array_equal(matrix[-2:, -2:], expectedEncodingCode):
+        if testmode:
+            print("encoding code error")
+            print(matrix[-2:, -2:])
+            print(expectedEncodingCode)
         return False
 
-    # Überprüfen, ob es keine 4 aufeinanderfolgenden schwarzen Quadrate in einer Zeile oder Spalte gibt
-    for i in range(21):
-        if np.any(np.convolve(matrix[i], np.ones(4), mode="valid") == 4) or np.any(
-            np.convolve(matrix[:, i], np.ones(4), mode="valid") == 4
-        ):
-            # print("too many squares in row error")
-            return False
+    # # Überprüfen, ob es keine 4 aufeinanderfolgenden schwarzen Quadrate in einer Zeile oder Spalte gibt
+    # maxSquaresInRow = 5
+    # for i in range(21):
+    #     if np.any(
+    #         np.convolve(matrix[i], np.ones(maxSquaresInRow), mode="valid")
+    #         == maxSquaresInRow
+    #     ) or np.any(
+    #         np.convolve(matrix[:, i], np.ones(maxSquaresInRow), mode="valid")
+    #         == maxSquaresInRow
+    #     ):
+    #         if testmode:
+    #             print("too many squares in row error")
+    #         return False
 
     return True
+
+
+def replaceInMatrix(arr, search, replace):
+    newArr = np.where(arr == search, replace, arr)
+    # newArr = [[_el if _el != search else replace for _el in _ar] for _ar in arr]
+    return newArr
 
 
 def create_qr_code_image(matrix, output_path):
@@ -150,6 +171,32 @@ maxKnownMatrix = np.array(
         [1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
         [1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
         [1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    ]
+)
+
+testMatrix = np.array(
+    [
+        [1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1],
+        [1, 0, 0, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1],
+        [1, 0, 1, 1, 1, 0, 1, 0, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1],
+        [1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1],
+        [1, 0, 1, 1, 1, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 0, 1, 1, 1, 0, 1],
+        [1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1],
+        [1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0],
+        [1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0],
+        [0, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 1, 0, 0, 1, 1, 1, 0, 1],
+        [1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 0],
+        [1, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 0, 1, 1, 0, 0],
+        [0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 1],
+        [0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0],
+        [1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 0, 0, 1, 1, 0],
+        [1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 1, 0, 1, 0, 1, 1, 1, 0],
+        [1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 0, 1, 0, 0, 0, 0],
+        [1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 0],
+        [1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 0, 1, 1, 0, 1, 1, 0, 0, 1, 0, 0],
+        [1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 1, 0, 0, 1, 1, 1, 0, 0],
+        [1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 0, 1, 0, 1, 0, 0, 1, 0],
     ]
 )
 
@@ -337,6 +384,19 @@ if __name__ == "__main__":
     except FileExistsError:
         # directory already exists
         pass
+
+    if testmode == True:
+        print(cv2.imread("res/testmode_qr-code.png"))
+        if is_valid_qr_code(testMatrix):
+            replacedMatrixToTest = replaceInMatrix(testMatrix, 1, 255)
+            decodedQR = decodeQRCode(replacedMatrixToTest)
+            print(decodedQR)
+            create_qr_code_image(testMatrix, "res/testmode_qr-code.png")
+            np.save("res/testmode_qr-matrix", testMatrix)
+            print("Test erfolgreich!")
+        else:
+            print("Test fehlerhaft.")
+        quit()
 
     permutationGenerator = permutations(tilesList)
     amountToCalculate = factorial(22)
