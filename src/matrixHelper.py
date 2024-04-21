@@ -9,7 +9,7 @@ def replaceInMatrix(arr, search, replace):
 
 def create3DMatrix(matrix_2d):
     matrix_2d_empty = np.zeros((23, 23))
-    matrix_2d = insert_matrix(matrix_2d_empty, matrix_2d, (1, 1))
+    matrix_2d = insertMatrixInMatrix(matrix_2d_empty, matrix_2d, (1, 1))
 
     matrix_3d = np.zeros((23, 23, 3), dtype=np.uint8)
     matrix_3d[matrix_2d == 1] = [0, 0, 0]  # Schwarze Quadrate
@@ -26,7 +26,7 @@ def create_qr_code_image(matrix, output_path):
     print(f"Das Bild wurde als {output_path} gespeichert.")
 
 
-def insert_matrix(big_matrix, small_matrix, position):
+def insertMatrixInMatrix(big_matrix, small_matrix, position):
     big_matrix[
         position[0] : position[0] + small_matrix.shape[0],
         position[1] : position[1] + small_matrix.shape[1],

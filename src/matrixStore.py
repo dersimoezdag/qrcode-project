@@ -192,3 +192,9 @@ validPositions = [
     (15, 18),
     (18, 18),
 ]
+
+validFor1818 = [
+    tile_25,
+    tile_27,
+    tile_49
+]
