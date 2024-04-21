@@ -1,26 +1,28 @@
+import os, errno
 import numpy as np
 import yaml
 import matplotlib.pyplot as plt
 from itertools import permutations
-from tqdm import tqdm
 from math import factorial
 
 
 def is_valid_qr_code(matrix):
-    # Überprüfen, ob die Matrix 21x21 ist
-    if matrix.shape != (21, 21):
-        print("shape error")
-        return False
+    # Unnötig für aktuellen Fall
 
-    # Überprüfen, ob es keine schwarzen Quadrate im zentralen 5x5-Bereich gibt
-    if np.sum(matrix[8:13, 8:13]) > 0:
-        print("central area error")
-        return False
+    # # Überprüfen, ob die Matrix 21x21 ist
+    # if matrix.shape != (21, 21):
+    #     print("shape error")
+    #     return False
 
-    # Überprüfen, ob es genau 3 schwarze Quadrate in den Ecken gibt
-    if matrix[0, 0] != 1 or matrix[0, 20] != 1 or matrix[20, 0] != 1:
-        print("orientation square error")
-        return False
+    # # Überprüfen, ob es keine schwarzen Quadrate im zentralen 5x5-Bereich gibt
+    # if np.sum(matrix[8:13, 8:13]) > 0:
+    #     print("central area error")
+    #     return False
+
+    # # Überprüfen, ob es genau 3 schwarze Quadrate in den Ecken gibt
+    # if matrix[0, 0] != 1 or matrix[0, 20] != 1 or matrix[20, 0] != 1:
+    #     print("orientation square error")
+    #     return False
 
     # Überprüfe Timingreihen
     expected_values = [0, 1, 0, 1, 0, 1, 0]
@@ -85,6 +87,32 @@ baseMatrix = np.array(
         [1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
         [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
         [1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    ]
+)
+
+maxKnownMatrix = np.array(
+    [
+        [1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1],
+        [1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
+        [1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1],
+        [1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1],
+        [1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1],
+        [1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1],
+        [1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0],
+        [1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     ]
 )
 
@@ -267,24 +295,33 @@ if __name__ == "__main__":
             "should both be: " + 22,
         )
 
-    # start main script
-    countPermutations = 0
-    with open("./result.yml", "w") as yaml_file:
-        yaml.dump(list(permutations(tilesList)), yaml_file, default_flow_style=False)
+    try:
+        os.makedirs("./res")
+    except FileExistsError:
+        # directory already exists
+        pass
 
-    # for perm in tqdm(availablePermuations):
-    #     countMainLoop = 0
-    #     for tile in perm:
-    #         countMainLoop += 1
+    permutationGenerator = permutations(tilesList)
 
-    #         for position in validPositions:
-    #             result_matrix = insert_matrix(baseMatrix, tile, position)
+    countMainLoop = 0
+    while countMainLoop < 999999999999999:
+        countMainLoop += 1
 
-    #         print(result_matrix)
-    #         # Überprüfen, ob die Matrix ein gültiger QR-Code ist
-    #         if is_valid_qr_code(result_matrix):
-    #             create_qr_code_image(
-    #                 result_matrix, "./valid_qr_code_" + countMainLoop + "_.png"
-    #             )
-    #         else:
-    #             print("Die Matrix ist kein gültiger QR-Code.")
+        perm = next(permutationGenerator)
+        result_matrix = maxKnownMatrix
+
+        i = 0
+        for tile in perm:
+            result_matrix = insert_matrix(result_matrix, tile, validPositions[i])
+            i += 1
+
+        print(result_matrix)
+
+        # Überprüfen, ob die Matrix ein gültiger QR-Code ist
+        if is_valid_qr_code(result_matrix):
+            create_qr_code_image(
+                result_matrix, "res/valid_qr_code_" + str(countMainLoop) + "_.png"
+            )
+            np.save("res/valid_test_" + str(countMainLoop), result_matrix)
+        else:
+            print("Die Matrix ist kein gültiger QR-Code.")
