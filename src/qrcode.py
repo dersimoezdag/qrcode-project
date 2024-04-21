@@ -22,7 +22,10 @@ def print_percent_done(index, total, bar_len=50, title="Please wait"):
     done_str = "█" * int(done)
     togo_str = "░" * int(togo)
 
-    print(f"\t⏳{title}: [{done_str}{togo_str}] {percent_done}% done", end="\r")
+    print(
+        f"\t⏳{title}: [{done_str}{togo_str}] {percent_done}% done. Current Element: {index}",
+        end="\r",
+    )
 
     if round(percent_done) == 100:
         print("\t✅")
