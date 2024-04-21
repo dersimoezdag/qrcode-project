@@ -32,3 +32,8 @@ def insertMatrixInMatrix(big_matrix, small_matrix, position):
         position[1] : position[1] + small_matrix.shape[1],
     ] = small_matrix
     return big_matrix
+
+def remove2DItemFrom3DArray(array, item):
+    index = np.where(np.all(array==item, axis=(1, 2)))[0][0]
+    resArray = np.delete(array, index,0)
+    return resArray

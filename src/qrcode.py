@@ -5,7 +5,7 @@ from math import factorial
 from pyzbar.pyzbar import decode as decodeQRCode
 
 from baseChecks import isValidQRCode
-from matrixHelper import insertMatrixInMatrix, replaceInMatrix, create_qr_code_image, create3DMatrix
+from matrixHelper import insertMatrixInMatrix, replaceInMatrix, create_qr_code_image, create3DMatrix,remove2DItemFrom3DArray
 
 from matrixStore import tilesList, maxKnownMatrix,validPositions,validFor1818
 
@@ -157,19 +157,18 @@ if __name__ == "__main__":
 
     corner1818 = validFor1818[stepMode]
     tiles = tilesList
-    np.delete(tiles, corner1818)
+    tiles = remove2DItemFrom3DArray(tiles, corner1818)
 
     positions = validPositions
-    np.delete(positions, (18,18))
+    positions.remove((18,18))
 
     matrix = insertMatrixInMatrix(maxKnownMatrix,corner1818,(18,18))
 
     # Check lists for valid length
-    if len(tilesList) != 22 or len(positions) != 22:
+    if len(tiles) !=  len(positions) :
         print(
             "tilesList: " + len(tiles),
-            "validPositions:" + len(positions),
-            "should both be: " + 22,
+            "validPositions:" + len(positions)
         )
 
     mainQRLoop(tiles,positions,matrix)
