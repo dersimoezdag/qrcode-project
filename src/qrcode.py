@@ -47,12 +47,24 @@ def is_valid_qr_code(matrix):
     #     return False
 
     # Überprüfe Timingreihen
-    expected_values = [0, 1, 0, 1, 0, 1, 0]
-    if np.array_equal(matrix[6, 6:13], expected_values):
+    expectedValues = [0, 1, 0, 1, 0, 1, 0]
+    if np.array_equal(matrix[6, 6:13], expectedValues):
         # print("timing row error")
         return False
-    if np.array_equal(matrix[6:16, 6], expected_values):
+    if np.array_equal(matrix[6:16, 6], expectedValues):
         # print("timing row error")
+        return False
+
+    # Überprüfe Matrixcode (Prüfen, ob die untere rechte 2x2-Submatrix der 21x21-Matrix mit dem Encoding-Code übereinstimmt)
+    # Vorliegend: Byte bei Matrix-Patter 2
+    # fmt: off
+    expectedEncodingCode = np.array([
+        [0, 0], 
+        [1, 0]
+        ])
+    # fmt: on
+    if np.array_equal(matrix[-2:, -2:], expectedEncodingCode):
+        # print("encoding code error")
         return False
 
     # Überprüfen, ob es keine 4 aufeinanderfolgenden schwarzen Quadrate in einer Zeile oder Spalte gibt
