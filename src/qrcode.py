@@ -9,7 +9,7 @@ from math import factorial
 from pyzbar.pyzbar import decode as decodeQRCode
 import cv2
 
-testmode = True
+testmode = False
 
 
 def print_percent_done(index, total, bar_len=50, title="Please wait"):
@@ -102,11 +102,19 @@ def replaceInMatrix(arr, search, replace):
     return newArr
 
 
+def create3DMatrix(matrix_2d):
+    matrix_2d_empty = np.zeros((23, 23))
+    matrix_2d = insert_matrix(matrix_2d_empty, matrix_2d, (1, 1))
+
+    matrix_3d = np.zeros((23, 23, 3), dtype=np.uint8)
+    matrix_3d[matrix_2d == 1] = [0, 0, 0]  # Schwarze Quadrate
+    matrix_3d[matrix_2d == 0] = [255, 255, 255]  # Weiße Quadrate
+    return matrix_3d
+
+
 def create_qr_code_image(matrix, output_path):
     # Erstelle ein Bild aus der Matrix
-    image = np.zeros((21, 21, 3), dtype=np.uint8)
-    image[matrix == 1] = [0, 0, 0]  # Schwarze Quadrate
-    image[matrix == 0] = [255, 255, 255]  # Weiße Quadrate
+    image = create3DMatrix(matrix)
 
     # Speichere das Bild
     plt.imsave(output_path, image)
@@ -386,14 +394,14 @@ if __name__ == "__main__":
         pass
 
     if testmode == True:
-        print(cv2.imread("res/testmode_qr-code.png"))
         if is_valid_qr_code(testMatrix):
-            replacedMatrixToTest = replaceInMatrix(testMatrix, 1, 255)
+            replacedMatrixToTest = create3DMatrix(testMatrix)
             decodedQR = decodeQRCode(replacedMatrixToTest)
-            print(decodedQR)
             create_qr_code_image(testMatrix, "res/testmode_qr-code.png")
             np.save("res/testmode_qr-matrix", testMatrix)
-            print("Test erfolgreich!")
+            if decodedQR and decodedQR[0] and decodedQR[0].data:
+                print("Decoded: ", decodedQR[0].data)
+                print("Test erfolgreich!")
         else:
             print("Test fehlerhaft.")
         quit()
@@ -420,10 +428,16 @@ if __name__ == "__main__":
 
         # Überprüfen, ob die Matrix ein gültiger QR-Code ist
         if is_valid_qr_code(result_matrix):
-            create_qr_code_image(
-                result_matrix, "res/valid_qr_code_" + str(countMainLoop) + "_.png"
-            )
-            np.save("res/valid_test_" + str(countMainLoop), result_matrix)
-            print("Treffer als png gespeichert!")
+            replacedMatrixToTest = create3DMatrix(result_matrix)
+            decodedQR = decodeQRCode(replacedMatrixToTest)
+
+            if decodedQR and decodedQR[0] and decodedQR[0].data:
+                print("Decoded: ", decodedQR[0].data)
+                print("Test erfolgreich!")
+                create_qr_code_image(
+                    result_matrix, "res/valid_qr_code_" + str(countMainLoop) + "_.png"
+                )
+                np.save("res/valid_test_" + str(countMainLoop), result_matrix)
+                print("Treffer als png gespeichert!")
         # else:
         # print("Die Matrix ist kein gültiger QR-Code.")
