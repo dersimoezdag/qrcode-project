@@ -157,10 +157,10 @@ if __name__ == "__main__":
 
     corner1818 = validFor1818[stepMode]
     tiles = tilesList
-    tiles.remove(corner1818)
+    np.delete(tiles, corner1818)
 
     positions = validPositions
-    positions.remove((18,18))
+    np.delete(positions, (18,18))
 
     matrix = insertMatrixInMatrix(maxKnownMatrix,corner1818,(18,18))
 
