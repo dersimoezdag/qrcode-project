@@ -9,11 +9,19 @@ Windows:
 -> https://python-poetry.org/docs/#installing-with-the-official-installer
 
 Install requirements
-`poetry install`
+
+```
+cd ./src/
+poetry install
+```
+
+ggf. werden die https://www.microsoft.com/de-de/download/details.aspx?id=40784 benötigt, wenn die libzbar-64.dll fehlt
 
 ## Starten
 
-`python .\src\qrcode.py`
+```
+python .\src\qrcode.py
+```
 
 Benötigt Python 3.11
 
