@@ -11,7 +11,7 @@ PyYAML = "^6.0.1"
 numpy = "^1.26.4"
 pyzbar = "^0.1.9"
 opencv-python = "^4.9.0.80"
-matplotlib="^3.8.4"
+matplotlib = "^3.8.4"
 
 
 [build-system]
