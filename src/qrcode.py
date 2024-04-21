@@ -14,7 +14,7 @@ def print_percent_done(index, total, bar_len=50, title="Please wait"):
     0 <= index < total
     """
     percent_done = (index + 1) / total * 100
-    percent_done = round(percent_done, 1)
+    percent_done = round(percent_done, 3)
 
     done = round(percent_done / (100 / bar_len))
     togo = bar_len - done
