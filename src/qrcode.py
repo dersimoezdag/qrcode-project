@@ -4,7 +4,7 @@ from itertools import permutations
 from math import factorial
 from pyzbar.pyzbar import decode as decodeQRCode
 
-from baseChecks import is_valid_qr_code
+from baseChecks import isValidQRCode
 from matrixHelper import insertMatrixInMatrix, replaceInMatrix, create_qr_code_image, create3DMatrix
 
 from matrixStore import tilesList, maxKnownMatrix,validPositions,validFor1818
@@ -115,7 +115,7 @@ def mainQRLoop(list,positions,matrix):
         # print(result_matrix)
 
         # Überprüfen, ob die Matrix ein gültiger QR-Code ist
-        if is_valid_qr_code(result_matrix):
+        if isValidQRCode(result_matrix, testmode):
             replacedMatrixToTest = create3DMatrix(result_matrix)
             decodedQR = decodeQRCode(replacedMatrixToTest)
 
@@ -142,7 +142,7 @@ if __name__ == "__main__":
         pass
 
     if testmode == True:
-        if is_valid_qr_code(testMatrix):
+        if isValidQRCode(testMatrix, testmode):
             replacedMatrixToTest = create3DMatrix(testMatrix)
             decodedQR = decodeQRCode(replacedMatrixToTest)
             create_qr_code_image(testMatrix, "res/testmode_qr-code.png")

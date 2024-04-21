@@ -1,7 +1,6 @@
-from qrcode import testmode
 import numpy as np
 
-def is_valid_qr_code(matrix):
+def isValidQRCode(matrix,testmode):
     # Unnötig für aktuellen Fall
 
     # # Überprüfen, ob die Matrix 21x21 ist
