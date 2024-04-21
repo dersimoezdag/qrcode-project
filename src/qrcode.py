@@ -1,9 +1,31 @@
 import os, errno
+import time
+import sys
 import numpy as np
 import yaml
 import matplotlib.pyplot as plt
 from itertools import permutations
 from math import factorial
+
+
+def print_percent_done(index, total, bar_len=50, title="Please wait"):
+    """
+    index is expected to be 0 based index.
+    0 <= index < total
+    """
+    percent_done = (index + 1) / total * 100
+    percent_done = round(percent_done, 1)
+
+    done = round(percent_done / (100 / bar_len))
+    togo = bar_len - done
+
+    done_str = "█" * int(done)
+    togo_str = "░" * int(togo)
+
+    print(f"\t⏳{title}: [{done_str}{togo_str}] {percent_done}% done", end="\r")
+
+    if round(percent_done) == 100:
+        print("\t✅")
 
 
 def is_valid_qr_code(matrix):
@@ -27,10 +49,10 @@ def is_valid_qr_code(matrix):
     # Überprüfe Timingreihen
     expected_values = [0, 1, 0, 1, 0, 1, 0]
     if np.array_equal(matrix[6, 6:13], expected_values):
-        print("timing row error")
+        # print("timing row error")
         return False
     if np.array_equal(matrix[6:16, 6], expected_values):
-        print("timing row error")
+        # print("timing row error")
         return False
 
     # Überprüfen, ob es keine 4 aufeinanderfolgenden schwarzen Quadrate in einer Zeile oder Spalte gibt
@@ -38,7 +60,7 @@ def is_valid_qr_code(matrix):
         if np.any(np.convolve(matrix[i], np.ones(4), mode="valid") == 4) or np.any(
             np.convolve(matrix[:, i], np.ones(4), mode="valid") == 4
         ):
-            print("too many squares in row error")
+            # print("too many squares in row error")
             return False
 
     return True
@@ -302,10 +324,14 @@ if __name__ == "__main__":
         pass
 
     permutationGenerator = permutations(tilesList)
+    amountToCalculate = factorial(22)
+
+    iterateXTimes = 9999999999
 
     countMainLoop = 0
-    while countMainLoop < 999999999999999:
+    while countMainLoop < iterateXTimes:
         countMainLoop += 1
+        print_percent_done(countMainLoop, iterateXTimes)
 
         perm = next(permutationGenerator)
         result_matrix = maxKnownMatrix
@@ -315,7 +341,7 @@ if __name__ == "__main__":
             result_matrix = insert_matrix(result_matrix, tile, validPositions[i])
             i += 1
 
-        print(result_matrix)
+        # print(result_matrix)
 
         # Überprüfen, ob die Matrix ein gültiger QR-Code ist
         if is_valid_qr_code(result_matrix):
@@ -323,5 +349,6 @@ if __name__ == "__main__":
                 result_matrix, "res/valid_qr_code_" + str(countMainLoop) + "_.png"
             )
             np.save("res/valid_test_" + str(countMainLoop), result_matrix)
-        else:
-            print("Die Matrix ist kein gültiger QR-Code.")
+            print("Treffer als png gespeichert!")
+        # else:
+        # print("Die Matrix ist kein gültiger QR-Code.")
