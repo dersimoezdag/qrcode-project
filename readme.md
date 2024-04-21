@@ -6,6 +6,7 @@ Install poetry
 
 Windows:
 `(Invoke-WebRequest -Uri https://install.python-poetry.org -UseBasicParsing).Content | py -`
+-> https://python-poetry.org/docs/#installing-with-the-official-installer
 
 Install requirements
 `poetry install`
@@ -19,5 +20,3 @@ Benötigt Python 3.11
 ## Hintergrund des Projekts
 
 ## ToDo
-
-`poetry init`
