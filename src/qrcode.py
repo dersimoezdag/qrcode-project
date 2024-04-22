@@ -1,17 +1,31 @@
 import os
+
 import numpy as np
 from itertools import permutations
 from math import factorial
 from pyzbar.pyzbar import decode as decodeQRCode
 
 from baseChecks import isValidQRCode
-from matrixHelper import insertMatrixInMatrix, replaceInMatrix, create_qr_code_image, create3DMatrix,remove2DItemFrom3DArray
+from matrixHelper import (
+    insertMatrixInMatrix,
+    replaceInMatrix,
+    create_qr_code_image,
+    create3DMatrix,
+    remove2DItemFrom3DArray,
+)
 
-from matrixStore import tilesListCenter, maxKnownMatrix,validPositions,validFor1818
+from matrixStore import tilesListCenter, maxKnownMatrix, validPositions, validFor1818
 
+## Settings start
+# activate testmode
 testmode = False
 # 0,1,2
 stepMode = 0
+# gpu for gpu otimized, cpu for cpu only
+processMode = "gpu"
+# times to iterate befor stop
+iterateXTimes = 9999999999
+## Settings end
 
 
 def print_percent_done(index, total, bar_len=50, title="Please wait"):
@@ -35,7 +49,6 @@ def print_percent_done(index, total, bar_len=50, title="Please wait"):
 
     if round(percent_done) == 100:
         print("\t✅")
-
 
 
 # 21x21-Matrix mit allen bekannten Elementen
@@ -66,7 +79,6 @@ baseMatrix = np.array(
 )
 
 
-
 testMatrix = np.array(
     [
         [1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1],
@@ -93,11 +105,23 @@ testMatrix = np.array(
     ]
 )
 
-def mainQRLoop(list,positions,matrix):
-    permutationGenerator = permutations(list)
-    amountToCalculate = factorial(len(list))
 
-    iterateXTimes = 9999999999
+def validateQRCode(matrix):
+    if isValidQRCode(matrix, testmode):
+        replacedMatrixToTest = create3DMatrix(matrix)
+        decodedQR = decodeQRCode(replacedMatrixToTest)
+
+        if decodedQR and decodedQR[0] and decodedQR[0].data:
+            return {"valid": True, "data": decodedQR[0].data}
+        else:
+            return {"valid": False, "data": None}
+    else:
+        return {"valid": False, "data": None}
+
+
+def mainQRLoop(tiles, positions, matrix):
+    permutationGenerator = permutations(tiles)
+    amountToCalculate = factorial(len(tiles))
 
     countMainLoop = 0
     while countMainLoop < iterateXTimes:
@@ -108,19 +132,18 @@ def mainQRLoop(list,positions,matrix):
         result_matrix = matrix
 
         i = 0
-        for tile in perm:
-            result_matrix = insertMatrixInMatrix(result_matrix, tile, positions[i])
+        for single_tile in perm:
+            position = positions[i]
+            result_matrix = insertMatrixInMatrix(result_matrix, single_tile, position)
             i += 1
 
         # print(result_matrix)
+        result = validateQRCode(result_matrix)
 
         # Überprüfen, ob die Matrix ein gültiger QR-Code ist
-        if isValidQRCode(result_matrix, testmode):
-            replacedMatrixToTest = create3DMatrix(result_matrix)
-            decodedQR = decodeQRCode(replacedMatrixToTest)
-
+        if result["valid"] == True:
             if decodedQR and decodedQR[0] and decodedQR[0].data:
-                print("Decoded: ", decodedQR[0].data)
+                print("Decoded: ", result["data"])
                 print("Test erfolgreich!")
                 create_qr_code_image(
                     result_matrix, "res/valid_qr_code_" + str(countMainLoop) + "_.png"
@@ -131,10 +154,9 @@ def mainQRLoop(list,positions,matrix):
         # print("Die Matrix ist kein gültiger QR-Code.")
 
 
-
 # Main
 if __name__ == "__main__":
-    
+
     try:
         os.makedirs("./res")
     except FileExistsError:
@@ -154,23 +176,22 @@ if __name__ == "__main__":
             print("Test fehlerhaft.")
         quit()
 
-
     corner1818 = validFor1818[stepMode]
     tiles = tilesListCenter
     tiles = remove2DItemFrom3DArray(tiles, corner1818)
 
     positions = validPositions
-    positions.remove((18,18))
-
-    matrix = insertMatrixInMatrix(maxKnownMatrix,corner1818,(18,18))
+    positions.remove((18, 18))
 
     # Check lists for valid length
-    if len(tiles) !=  len(positions) :
+    if len(tiles) != len(positions):
+        print("ERROR:")
         print(
-            "tilesListCenter: " + len(tiles),
-            "validPositions:" + len(positions)
+            "tilesListCenter: " + str(len(tiles)),
+            "validPositions:" + str(len(positions)),
         )
+        quit()
 
-    mainQRLoop(tiles,positions,matrix)
+    matrix = insertMatrixInMatrix(maxKnownMatrix, corner1818, (18, 18))
 
-    
+    mainQRLoop(tiles, positions, matrix)

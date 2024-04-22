@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
+
 def replaceInMatrix(arr, search, replace):
     newArr = np.where(arr == search, replace, arr)
     # newArr = [[_el if _el != search else replace for _el in _ar] for _ar in arr]
@@ -33,7 +34,8 @@ def insertMatrixInMatrix(big_matrix, small_matrix, position):
     ] = small_matrix
     return big_matrix
 
+
 def remove2DItemFrom3DArray(array, item):
-    index = np.where(np.all(array==item, axis=(1, 2)))[0][0]
-    resArray = np.delete(array, index,0)
+    index = np.where(np.all(array == item, axis=(1, 2)))[0][0]
+    resArray = np.delete(array, index, 0)
     return resArray

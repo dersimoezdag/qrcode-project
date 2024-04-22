@@ -15,6 +15,12 @@ cd ./src/
 poetry install
 ```
 
+For GPU accelation
+
+```
+conda install numba & conda install cudatoolkit
+```
+
 ggf. werden die https://www.microsoft.com/de-de/download/details.aspx?id=40784 benötigt, wenn die libzbar-64.dll fehlt
 
 ## Starten
