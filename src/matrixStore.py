@@ -43,9 +43,19 @@ tile_11 = np.array([
     [1,0,0],
     [0,0,1]
     ])
+tile_17 = np.array([
+    [1,0,1],
+    [0,0,0],
+    [1,1,1]
+    ])
 tile_18 = np.array([
     [0,1,0],
     [1,1,1],
+    [1,1,0]
+    ])
+tile_19 = np.array([
+    [1,0,1],
+    [1,0,0],
     [1,1,0]
     ])
 tile_22 = np.array([
@@ -145,9 +155,10 @@ tile_49 = np.array([
     ])
 # fmt: on
 
-tilesList = [
+tilesListCenter = [
     tile_04,
     tile_11,
+    tile_17,
     tile_18,
     tile_22,
     tile_23,
@@ -195,8 +206,16 @@ validPositions = [
     (18, 18),
 ]
 
-validFor1818 = [
-    tile_25,
-    tile_27,
-    tile_49
-]
+validFor1818 = [tile_25, tile_27, tile_49]
+
+validForTimingRow = {
+    "left": [tile_17, tile_25],
+    "middle": [tile_18, tile_11, tile_32, tile_34],
+    "right": [tile_19, tile_25, tile_39, tile_33],
+}
+
+validForTimingColMiddle = {
+    "top": validForTimingRow["left"],
+    "middle": [],
+    "bottom": [],
+}

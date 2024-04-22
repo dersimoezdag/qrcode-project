@@ -7,7 +7,7 @@ from pyzbar.pyzbar import decode as decodeQRCode
 from baseChecks import isValidQRCode
 from matrixHelper import insertMatrixInMatrix, replaceInMatrix, create_qr_code_image, create3DMatrix,remove2DItemFrom3DArray
 
-from matrixStore import tilesList, maxKnownMatrix,validPositions,validFor1818
+from matrixStore import tilesListCenter, maxKnownMatrix,validPositions,validFor1818
 
 testmode = False
 # 0,1,2
@@ -156,7 +156,7 @@ if __name__ == "__main__":
 
 
     corner1818 = validFor1818[stepMode]
-    tiles = tilesList
+    tiles = tilesListCenter
     tiles = remove2DItemFrom3DArray(tiles, corner1818)
 
     positions = validPositions
@@ -167,7 +167,7 @@ if __name__ == "__main__":
     # Check lists for valid length
     if len(tiles) !=  len(positions) :
         print(
-            "tilesList: " + len(tiles),
+            "tilesListCenter: " + len(tiles),
             "validPositions:" + len(positions)
         )
 
