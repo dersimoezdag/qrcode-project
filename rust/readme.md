@@ -7,13 +7,15 @@
 Compile:
 
 ```
-rustc main.rs
+cd ./src
+cargo build
 ```
 
 Run compiled:
 
 ```
-.\main.exe
+cd ./target/debug
+.\src.exe
 ```
 
 ##
