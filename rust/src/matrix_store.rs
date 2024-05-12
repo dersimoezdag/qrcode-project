@@ -247,17 +247,16 @@ pub mod matrix_store {
 
     pub static VALID_FOR_1818: [&'static [[i32; 3]; 3]; 3] = [&TILE_25, &TILE_27, &TILE_49];
 
-pub static VALID_FOR_TIMING_ROW: [(&'static str, &'static [[i32; 3]; 3]; 2); 3] = [
-    ("left", &[TILE_17, TILE_25]),
-    ("middle", &[TILE_18, TILE_11, TILE_32, TILE_34]),
-    ("right", &[TILE_19, TILE_25, TILE_39, TILE_33]),
-];
-
-pub static VALID_FOR_TIMING_COL_MIDDLE: [(&'static str, &'static [[i32; 3]; 3]; usize); 3] = [
-    ("top", VALID_FOR_TIMING_ROW[0].1),
-    ("middle", &[]),
-    ("bottom", &[]),
-];
-
+    pub static VALID_FOR_TIMING_ROW: [(&'static str, &'static [[i32; 3]; 3]; 2); 3] = [
+        ("left", &[TILE_17, TILE_25]),
+        ("middle", &[TILE_18, TILE_11, TILE_32, TILE_34]),
+        ("right", &[TILE_19, TILE_25, TILE_39, TILE_33]),
     ];
+
+    pub static VALID_FOR_TIMING_COL_MIDDLE: [(&'static str, &'static [[i32; 3]; 3]; 2); 3] = [
+        ("top", VALID_FOR_TIMING_ROW[0].1),
+        ("middle", &[]),
+        ("bottom", &[]),
+    ];
+    
 }

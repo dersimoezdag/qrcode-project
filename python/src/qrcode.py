@@ -21,8 +21,6 @@ from matrixStore import tilesListCenter, maxKnownMatrix, validPositions, validFo
 testmode = False
 # 0,1,2
 stepMode = 0
-# gpu for gpu otimized, cpu for cpu only
-processMode = "gpu"
 # times to iterate befor stop
 iterateXTimes = 9999999999
 ## Settings end
