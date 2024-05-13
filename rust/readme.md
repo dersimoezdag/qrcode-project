@@ -15,7 +15,7 @@ Run compiled:
 
 ```
 cd ./target/debug
-.\src.exe
+.\qr_code_project_rust.exe
 ```
 
 ##
