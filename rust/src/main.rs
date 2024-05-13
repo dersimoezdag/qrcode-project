@@ -1,27 +1,22 @@
 use indicatif::{ProgressBar, ProgressStyle};
 use std::fs;
 use std::path::Path;
+use std::{thread, time};
 
 mod matrix_store;
 mod qrcode_verification;
 
 // Settings start
 // activate testmode
-const testmode: bool = false;
+const TESTMODE: bool = false;
 // 0,1,2
-const stepMode: i64 = 0;
+const STEP_MODE: i64 = 0;
 // times to iterate befor stop
-const iterate_x_times: i64 = 9999999999;
+const ITERATE_X_TIMES: i64 = 9999999999;
 // Settings end
 
 fn main() {
     println!("QR-Code Project started");
-
-    let pb = ProgressBar::new(100);
-    fn update_progress_bar(pb: ProgressBar, progress: u64) {
-        // Fortschritt auf 'progress' setzen
-        pb.set_position(progress);
-    }
 
     let path = "./res";
     if !Path::new(path).exists() {
@@ -35,14 +30,20 @@ fn main() {
         println!("Ordner 'res' existiert bereits.")
     }
 
-    pb.set_style(
+    let progress_bar = ProgressBar::new(10000);
+    progress_bar.set_style(
         ProgressStyle::default_bar()
             .template("{spinner} [{elapsed_precise}] [{bar:40.cyan/black}] {percent}%")
             .unwrap(),
     );
 
-    for i in 0..100 {
+    let delay = time::Duration::from_millis(25);
+
+    for progress in 0..100 {
+        thread::sleep(delay);
         // Code, der den Fortschritt simuliert
-        update_progress_bar(pb, i);
+        progress_bar.set_position(progress);
     }
+
+    progress_bar.finish();
 }

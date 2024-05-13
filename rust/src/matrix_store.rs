@@ -61,6 +61,13 @@ pub mod matrix_store {
     ];
 
     #[rustfmt::skip]
+    pub static TILE_19: [[i32; 3]; 3] = [
+        [1, 0, 1],
+        [1, 0, 0],
+        [1, 1, 0]
+    ];
+
+    #[rustfmt::skip]
     pub static TILE_22: [[i32; 3]; 3] = [
         [1, 0, 0],
         [1, 1, 0],
@@ -247,16 +254,13 @@ pub mod matrix_store {
 
     pub static VALID_FOR_1818: [&'static [[i32; 3]; 3]; 3] = [&TILE_25, &TILE_27, &TILE_49];
 
-    pub static VALID_FOR_TIMING_ROW: [(&'static str, &'static [[i32; 3]; 3]; 2); 3] = [
-        ("left", &[TILE_17, TILE_25]),
-        ("middle", &[TILE_18, TILE_11, TILE_32, TILE_34]),
-        ("right", &[TILE_19, TILE_25, TILE_39, TILE_33]),
-    ];
+    pub static VALID_FOR_TIMING_ROW_L: [&'static [[i32; 3]; 3]; 2] = [&TILE_17, &TILE_25];
+    pub static VALID_FOR_TIMING_ROW_M: [&'static [[i32; 3]; 3]; 4] =
+        [&TILE_18, &TILE_11, &TILE_32, &TILE_34];
+    pub static VALID_FOR_TIMING_ROW_R: [&'static [[i32; 3]; 3]; 4] =
+        [&TILE_19, &TILE_25, &TILE_39, &TILE_33];
 
-    pub static VALID_FOR_TIMING_COL_MIDDLE: [(&'static str, &'static [[i32; 3]; 3]; 2); 3] = [
-        ("top", VALID_FOR_TIMING_ROW[0].1),
-        ("middle", &[]),
-        ("bottom", &[]),
-    ];
-    
+    pub static VALID_FOR_TIMING_COL_MIDDLE_L: [&'static [[i32; 3]; 3]; 2] = [&TILE_17, &TILE_25];
+    pub static VALID_FOR_TIMING_COL_MIDDLE_M: [&'static [[i32; 3]; 3]; 0] = [];
+    pub static VALID_FOR_TIMING_COL_MIDDLE_R: [&'static [[i32; 3]; 3]; 0] = [];
 }

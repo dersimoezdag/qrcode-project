@@ -1,5 +1,5 @@
 [package]
-name = "QR-Code_Project_Rust"
+name = "qr_code_project_rust"
 version = "0.1.0"
 edition = "2021"
 target-dir = "../dist"

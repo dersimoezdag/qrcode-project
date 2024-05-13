@@ -3,13 +3,6 @@
 version = 3
 
 [[package]]
-name = "QR-Code_Project_Rust"
-version = "0.1.0"
-dependencies = [
- "indicatif",
-]
-
-[[package]]
 name = "cfg-if"
 version = "1.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -79,6 +72,13 @@ name = "portable-atomic"
 version = "1.6.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7170ef9988bc169ba16dd36a7fa041e5c4cbeb6a35b76d4c03daded371eae7c0"
+
+[[package]]
+name = "qr_code_project_rust"
+version = "0.1.0"
+dependencies = [
+ "indicatif",
+]
 
 [[package]]
 name = "unicode-width"
